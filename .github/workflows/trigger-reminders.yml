@@ -1,0 +1,14 @@
+name: Trigger Daily Reminders
+
+on:
+  schedule:
+    # 03:30 UTC is exactly 09:00 AM IST
+    - cron: '30 3 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Server
+        run: curl -s https://battlebeast.onrender.com/api/check-reminders
