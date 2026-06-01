@@ -1,0 +1,8 @@
+node_modules/
+.pnp
+.pnp.js
+.env
+.env.local
+auth_info/
+*firebase-adminsdk*.json
+.DS_Store

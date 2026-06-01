@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store - BATTLE BEAST</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Teko', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .store-hero-section {
+            background-image: linear-gradient(rgba(17, 24, 39, 0.85), rgba(17, 24, 39, 0.85)), url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=2670&auto=format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+            background-size: cover;
+            background-position: center 70%;
+        }
+        .product-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 1px solid #374151; /* gray-700 */
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(6, 182, 212, 0.2), 0 10px 10px -5px rgba(6, 182, 212, 0.1);
+            border-color: #06b6d4; /* cyan-500 */
+        }
+        /* Cart Modal Styles */
+        #cart-modal {
+            transition: opacity 0.3s ease;
+        }
+        #cart-modal-content {
+            transition: transform 0.3s ease;
+        }
+        .sale-banner {
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .sale-badge { 
+            background-color: #ef4444; 
+            color: white; 
+            padding: 0.5rem 1rem; /* Increased padding */
+            font-size: 1rem; /* Increased font size */
+        }
+        .bestseller-badge { background-color: #f59e0b; color: white; }
+
+        /* Toast Notification */
+        #toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(200%);
+            background-color: #10b981; /* green-500 */
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.5s ease-in-out;
+            z-index: 110;
+        }
+        #toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- Header -->
+    <header id="header" class="bg-gray-900/80 backdrop-blur-sm sticky w-full z-50 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-cyan-400 tracking-wider"> BATTLE BEAST</a>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="index.html" class="hover:text-cyan-400 transition duration-300">Home</a>
+                <a href="store.html" class="text-cyan-400 font-bold transition duration-300 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M4 4a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                      <path fill-rule="evenodd" d="M5 8a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V8zm2 3a1 1 0 100 2h4a1 1 0 100-2H7z" clip-rule="evenodd" />
+                    </svg>
+                    Store
+                </a>
+            </nav>
+            <button id="cart-button" class="relative text-white hover:text-cyan-400 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-cyan-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Sale Banner -->
+        <div class="sale-banner text-center p-3 font-bold text-lg">
+            🔥 MONSOON SALE LIVE! Ends in: <span id="countdown-timer"></span> 🔥
+        </div>
+
+        <!-- Store Hero Section -->
+        <section class="store-hero-section py-24 text-center">
+            <div class="container mx-auto px-6">
+                <h1 class="text-6xl md:text-8xl text-white font-extrabold uppercase">Fuel Your Fitness</h1>
+                <p class="text-xl md:text-2xl mt-4 text-gray-300 max-w-3xl mx-auto">Premium supplements designed to help you achieve your goals faster. Get the edge you need to get shredded.</p>
+            </div>
+        </section>
+
+        <div class="container mx-auto px-6 py-20">
+            <!-- Best Sellers Section -->
+            <section id="bestsellers" class="mb-20">
+                <h2 class="text-5xl md:text-6xl uppercase text-amber-400 mb-10 text-center">Best Sellers</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Best Seller Product 1 -->
+                    <div class="bg-gray-800 rounded-2xl product-card flex flex-col text-center overflow-hidden relative">
+                        <div class="bestseller-badge">Best Seller</div>
+                        <img src="https://placehold.co/400x400/f59e0b/111827?text=Gold+Whey" alt="Gold Standard Whey" class="w-full h-64 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-3xl mb-2">Gold Standard Whey</h3>
+                            <p class="text-gray-400 flex-grow">The world's best-selling whey protein. 24g of protein per serving.</p>
+                            <p class="text-3xl font-bold my-4 text-amber-400">₹4500</p>
+                            <a href="#product-1" class="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">View Details</a>
+                        </div>
+                    </div>
+                     <!-- Best Seller Product 2 -->
+                    <div class="bg-gray-800 rounded-2xl product-card flex flex-col text-center overflow-hidden relative">
+                        <div class="bestseller-badge">Best Seller</div>
+                        <img src="https://placehold.co/400x400/f59e0b/111827?text=Creatine" alt="Creatine Monohydrate" class="w-full h-64 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-3xl mb-2">Creatine Monohydrate</h3>
+                            <p class="text-gray-400 flex-grow">Pure micronized creatine to increase strength, power, and muscle size.</p>
+                            <p class="text-3xl font-bold my-4 text-amber-400">₹1200</p>
+                             <a href="#product-3" class="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- All Products Section -->
+            <section id="products">
+                <!-- Proteins -->
+                <div>
+                    <h2 class="text-5xl md:text-6xl uppercase text-cyan-400 mb-10">Whey Proteins</h2>
+                    <div class="grid grid-cols-1 gap-12">
+                        <!-- Product 1 -->
+                        <div id="product-1" class="bg-gray-800 rounded-2xl product-card overflow-hidden grid md:grid-cols-2 gap-8 items-center p-6 relative">
+                            <div class="product-badge sale-badge">Sale!</div>
+                            <img src="https://placehold.co/600x600/0891B2/FFFFFF?text=Whey+Protein" alt="Gold Standard Whey" class="w-full h-full object-cover rounded-lg">
+                            <div class="flex flex-col">
+                                <h3 class="text-5xl">Gold Standard Whey</h3>
+                                <div class="my-4">
+                                    <span class="text-4xl font-bold text-red-500 product-price">₹4299</span>
+                                    <span class="text-2xl text-gray-500 line-through ml-2">₹4500</span>
+                                </div>
+                                <div class="space-y-2 text-gray-300">
+                                    <p><strong>Benefits:</strong> Supports muscle growth and recovery after intense workouts.</p>
+                                    <p><strong>Key Ingredients:</strong> Whey Protein Isolate, Whey Protein Concentrate, Whey Peptides.</p>
+                                    <p><strong>Suitable For:</strong> Athletes, bodybuilders, and fitness enthusiasts.</p>
+                                </div>
+                                <div class="mt-6 space-y-4">
+                                    <div>
+                                        <label for="size-1" class="font-bold">Size:</label>
+                                        <select id="size-1" class="product-size bg-gray-700 rounded p-2 ml-2">
+                                            <option value="1" data-price="4299">1 kg</option>
+                                            <option value="2" data-price="7999">2 kg</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="flavour-1" class="font-bold">Flavour:</label>
+                                        <select id="flavour-1" class="product-flavour bg-gray-700 rounded p-2 ml-2">
+                                            <option>Double Rich Chocolate</option>
+                                            <option>Vanilla Ice Cream</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart-btn w-full mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-xl" data-id="1" data-name="Gold Standard Whey" data-image="https://placehold.co/100x100/0891B2/FFFFFF?text=Whey">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Creatines -->
+                <div class="mt-20">
+                    <h2 class="text-5xl md:text-6xl uppercase text-cyan-400 mb-10">Creatine & Performance</h2>
+                     <div class="grid grid-cols-1 gap-12">
+                        <!-- Product 3 -->
+                        <div id="product-3" class="bg-gray-800 rounded-2xl product-card overflow-hidden grid md:grid-cols-2 gap-8 items-center p-6 relative">
+                             <img src="https://placehold.co/600x600/0891B2/FFFFFF?text=Creatine" alt="Creatine Monohydrate" class="w-full h-full object-cover rounded-lg">
+                            <div class="flex flex-col">
+                                <h3 class="text-5xl">Creatine Monohydrate</h3>
+                                <div class="my-4">
+                                    <span class="text-4xl font-bold text-cyan-400 product-price">₹1200</span>
+                                </div>
+                                <div class="space-y-2 text-gray-300">
+                                    <p><strong>Benefits:</strong> Increases strength, power output, and muscle size.</p>
+                                    <p><strong>Key Ingredients:</strong> 100% Micronized Creatine Monohydrate.</p>
+                                    <p><strong>Suitable For:</strong> Anyone looking to improve performance and build lean muscle.</p>
+                                </div>
+                                <div class="mt-6 space-y-4">
+                                     <div>
+                                        <label for="size-3" class="font-bold">Size:</label>
+                                        <select id="size-3" class="product-size bg-gray-700 rounded p-2 ml-2">
+                                            <option value="1" data-price="1200">250g</option>
+                                            <option value="2" data-price="2200">500g</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="flavour-3" class="font-bold">Flavour:</label>
+                                        <select id="flavour-3" class="product-flavour bg-gray-700 rounded p-2 ml-2">
+                                            <option>Unflavored</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button class="add-to-cart-btn w-full mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-xl" data-id="3" data-name="Creatine Monohydrate" data-image="https://placehold.co/100x100/0891B2/FFFFFF?text=Creatine">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Customer Reviews -->
+            <section id="reviews" class="mt-20 text-center">
+                <h2 class="text-5xl md:text-6xl uppercase text-amber-400 mb-10">What Our Freaks Say</h2>
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- Review 1 -->
+                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                        <div class="text-amber-400 mb-2">★★★★★</div>
+                        <p class="text-gray-300 italic">"The best supplements in Patna, period. The Gold Standard Whey tastes amazing and the results are real. Highly recommend!"</p>
+                        <p class="font-bold mt-4">- Rohan K.</p>
+                    </div>
+                     <!-- Review 2 -->
+                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                        <div class="text-amber-400 mb-2">★★★★★</div>
+                        <p class="text-gray-300 italic">"Finally a place that sells genuine products. The creatine gave me a huge boost in my lifts. The gym is the best, and so is the store!"</p>
+                        <p class="font-bold mt-4">- Anjali S.</p>
+                    </div>
+                     <!-- Review 3 -->
+                    <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                        <div class="text-amber-400 mb-2">★★★★★</div>
+                        <p class="text-gray-300 italic">"Quick delivery and authentic products. What more can you ask for? The team is super helpful as well."</p>
+                        <p class="font-bold mt-4">- Vikram R.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <p>&copy; 2024 FITNESS FREAK. All Rights Reserved.</p>
+            <p>Designed with ❤️ by huz.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 flex items-center justify-end z-[100] px-4 opacity-0 pointer-events-none">
+        <div id="cart-modal-content" class="bg-gray-800 rounded-l-2xl shadow-2xl h-full w-full max-w-lg flex flex-col transform translate-x-full">
+            <div class="flex justify-between items-center border-b border-gray-700 p-6">
+                <h2 class="text-4xl text-cyan-400 uppercase">Your Cart</h2>
+                <button id="close-cart-btn" class="text-gray-400 hover:text-white text-4xl font-light">&times;</button>
+            </div>
+            <div id="cart-items" class="flex-grow p-6 space-y-4 overflow-y-auto">
+                <!-- Cart items will be injected here -->
+            </div>
+            <div id="cart-footer" class="p-6 border-t border-gray-700 bg-gray-800">
+                 <div class="flex items-center space-x-2 mb-4">
+                    <input type="text" id="pincode-input" placeholder="Enter Pincode" class="bg-gray-700 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <button id="pincode-check-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-md">Check</button>
+                 </div>
+                 <p id="pincode-message" class="text-sm text-center mb-4 h-5"></p>
+                 <div class="flex justify-between items-center text-2xl">
+                    <span class="font-bold">Total:</span>
+                    <span id="cart-total" class="font-bold text-cyan-400">₹0</span>
+                </div>
+                <button id="checkout-btn" class="w-full mt-4 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 text-xl">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification">
+        Added one item to cart successfully!!
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const cartButton = document.getElementById('cart-button');
+            const cartModal = document.getElementById('cart-modal');
+            const cartModalContent = document.getElementById('cart-modal-content');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            const sizeSelectors = document.querySelectorAll('.product-size');
+            const pincodeBtn = document.getElementById('pincode-check-btn');
+            const pincodeInput = document.getElementById('pincode-input');
+            const pincodeMsg = document.getElementById('pincode-message');
+            const countdownTimer = document.getElementById('countdown-timer');
+            const toast = document.getElementById('toast-notification');
+
+            let cart = [];
+
+            // --- Countdown Timer ---
+            let saleEndDate = new Date().getTime() + (2 * 24 * 60 * 60 * 1000); // 2 days from now
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = saleEndDate - now;
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                countdownTimer.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    countdownTimer.innerHTML = "SALE ENDED";
+                }
+            }
+            let timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+
+            // --- Event Listeners ---
+            cartButton.addEventListener('click', openCart);
+            closeCartBtn.addEventListener('click', closeCart);
+            cartModal.addEventListener('click', (e) => {
+                if (e.target === cartModal) closeCart();
+            });
+
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productCard = e.target.closest('.grid > div');
+                    const id = e.target.dataset.id;
+                    const name = e.target.dataset.name;
+                    const image = e.target.dataset.image;
+                    
+                    const sizeSelect = productCard.querySelector('.product-size');
+                    const flavourSelect = productCard.querySelector('.product-flavour');
+
+                    const selectedSizeOption = sizeSelect.options[sizeSelect.selectedIndex];
+                    const price = parseInt(selectedSizeOption.dataset.price);
+                    const sizeText = selectedSizeOption.text;
+                    const flavourText = flavourSelect.value;
+                    
+                    const uniqueId = `${id}-${sizeSelect.value}`;
+
+                    addToCart({ id: uniqueId, name, price, image, size: sizeText, flavour: flavourText });
+                });
+            });
+
+            sizeSelectors.forEach(select => {
+                select.addEventListener('change', (e) => {
+                    const selectedOption = e.target.options[e.target.selectedIndex];
+                    const newPrice = selectedOption.dataset.price;
+                    const priceElement = e.target.closest('.grid > div').querySelector('.product-price');
+                    priceElement.textContent = `₹${newPrice}`;
+                });
+            });
+
+            cartItemsContainer.addEventListener('click', (e) => {
+                const id = e.target.closest('.cart-item')?.dataset.id;
+                if (!id) return;
+                if (e.target.classList.contains('increase-qty')) changeQuantity(id, 1);
+                if (e.target.classList.contains('decrease-qty')) changeQuantity(id, -1);
+                if (e.target.classList.contains('remove-item')) removeFromCart(id);
+            });
+            
+            pincodeBtn.addEventListener('click', () => {
+                const pincode = pincodeInput.value;
+                pincodeMsg.textContent = '';
+                if (!/^\d{6}$/.test(pincode)) {
+                    pincodeMsg.textContent = "Please enter a valid 6-digit pincode.";
+                    pincodeMsg.style.color = '#ef4444'; // red
+                    return;
+                }
+                pincodeMsg.textContent = "Checking...";
+                pincodeMsg.style.color = '#f59e0b'; // amber
+                setTimeout(() => {
+                    pincodeMsg.textContent = "Great! Delivery is available to your location.";
+                    pincodeMsg.style.color = '#10b981'; // green
+                }, 1500);
+            });
+
+            checkoutBtn.addEventListener('click', () => {
+                if (cart.length === 0) {
+                    alert("Your cart is empty!");
+                    return;
+                }
+                alert("Checkout functionality is not implemented in this demo.");
+            });
+
+            // --- Functions ---
+            function showToast() {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+
+            function openCart() {
+                cartModal.classList.remove('opacity-0', 'pointer-events-none');
+                cartModalContent.classList.remove('translate-x-full');
+            }
+
+            function closeCart() {
+                cartModal.classList.add('opacity-0', 'pointer-events-none');
+                cartModalContent.classList.add('translate-x-full');
+            }
+
+            function addToCart(product) {
+                const existingItem = cart.find(item => item.id === product.id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ ...product, quantity: 1 });
+                }
+                renderCart();
+                showToast();
+            }
+
+            function removeFromCart(id) {
+                cart = cart.filter(item => item.id !== id);
+                renderCart();
+            }
+
+            function changeQuantity(id, amount) {
+                const item = cart.find(item => item.id === id);
+                if (item) {
+                    item.quantity += amount;
+                    if (item.quantity <= 0) {
+                        removeFromCart(id);
+                    } else {
+                        renderCart();
+                    }
+                }
+            }
+
+            function renderCart() {
+                cartItemsContainer.innerHTML = '';
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<p class="text-gray-400 text-center">Your cart is empty.</p>';
+                } else {
+                    cart.forEach(item => {
+                        const cartItemElement = document.createElement('div');
+                        cartItemElement.className = 'cart-item flex items-center justify-between bg-gray-700 p-3 rounded-lg';
+                        cartItemElement.dataset.id = item.id;
+                        cartItemElement.innerHTML = `
+                            <div class="flex items-center gap-4">
+                                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-md object-cover">
+                                <div>
+                                    <h4 class="font-bold text-base">${item.name}</h4>
+                                    <p class="text-sm text-gray-400">${item.size} - ${item.flavour}</p>
+                                    <p class="text-cyan-400 font-bold">₹${item.price}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button class="decrease-qty bg-gray-600 w-7 h-7 rounded-full hover:bg-gray-500">-</button>
+                                <span class="font-bold">${item.quantity}</span>
+                                <button class="increase-qty bg-gray-600 w-7 h-7 rounded-full hover:bg-gray-500">+</button>
+                                <button class="remove-item text-red-500 hover:text-red-400 ml-2 text-2xl font-bold">&times;</button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(cartItemElement);
+                    });
+                }
+                updateCartSummary();
+            }
+
+            function updateCartSummary() {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+                cartTotal.textContent = `₹${total}`;
+                cartCount.textContent = count;
+            }
+        });
+    </script>
+</body>
+</html>

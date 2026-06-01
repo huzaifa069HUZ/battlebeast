@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATTLE BEAST — Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        h1,h2,h3,h4,h5,h6 { font-family: 'Teko', sans-serif; font-weight: 600; letter-spacing: 1px; }
+        .glass { background: rgba(17,24,39,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(6,182,212,0.15); }
+        .stat-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(6,182,212,0.15); }
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from{ opacity:0; transform:translateY(20px); } to{ opacity:1; transform:translateY(0); } }
+        .btn-primary { background: linear-gradient(135deg, #06b6d4, #0891b2); transition: all 0.3s; }
+        .btn-primary:hover { background: linear-gradient(135deg, #0891b2, #0e7490); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(6,182,212,0.3); }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); transition: all 0.3s; }
+        .btn-danger:hover { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+        .badge-active { background: #065f46; color: #6ee7b7; }
+        .badge-warning { background: #78350f; color: #fcd34d; }
+        .badge-expired { background: #7f1d1d; color: #fca5a5; }
+        .table-row { transition: background 0.2s; }
+        .table-row:hover { background: rgba(6,182,212,0.05); }
+        input, select { transition: border-color 0.3s, box-shadow 0.3s; }
+        input:focus, select:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,0.15); }
+        .modal-overlay { transition: opacity 0.3s; }
+        .modal-box { transition: transform 0.3s, opacity 0.3s; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen">
+
+<!-- ======================== LOGIN SCREEN ======================== -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center px-4">
+    <div class="glass rounded-2xl p-8 w-full max-w-md text-center fade-in">
+        <h1 class="text-5xl text-cyan-400 uppercase mb-2">Battle Beast</h1>
+        <p class="text-gray-400 mb-8">Admin Dashboard — Secure Access</p>
+        <div class="space-y-4">
+            <input id="login-password" type="password" placeholder="Enter Admin Password"
+                class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none">
+            <button id="login-btn" onclick="handleLogin()"
+                class="w-full btn-primary text-white font-bold py-3 rounded-xl uppercase tracking-wider">
+                🔐 Login
+            </button>
+            <p id="login-error" class="text-red-400 text-sm hidden"></p>
+        </div>
+        <a href="index.html" class="inline-block mt-6 text-gray-500 text-sm hover:text-cyan-400 transition">← Back to Website</a>
+    </div>
+</div>
+
+<!-- ======================== DASHBOARD ======================== -->
+<div id="dashboard" class="hidden">
+
+    <!-- Top Bar -->
+    <header class="glass sticky top-0 z-40 px-6 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <h1 class="text-2xl text-cyan-400 uppercase">Battle Beast</h1>
+            <span class="text-gray-500 text-sm hidden sm:inline">Admin Panel</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="wa-status" class="flex items-center gap-2 text-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-gray-500 pulse-dot" id="wa-dot"></span>
+                <span id="wa-text" class="text-gray-400 hidden sm:inline">Checking...</span>
+            </div>
+            <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition text-sm">Logout</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="stats-grid">
+            <div class="stat-card glass rounded-xl p-5">
+                <p class="text-gray-400 text-sm">Total Members</p>
+                <p class="text-3xl font-bold text-white mt-1" id="stat-total">—</p>
+            </div>
+            <div class="stat-card glass rounded-xl p-5">
+                <p class="text-gray-400 text-sm">Active</p>
+                <p class="text-3xl font-bold text-emerald-400 mt-1" id="stat-active">—</p>
+            </div>
+            <div class="stat-card glass rounded-xl p-5">
+                <p class="text-gray-400 text-sm">Expiring Soon</p>
+                <p class="text-3xl font-bold text-amber-400 mt-1" id="stat-expiring">—</p>
+            </div>
+            <div class="stat-card glass rounded-xl p-5">
+                <p class="text-gray-400 text-sm">Expired</p>
+                <p class="text-3xl font-bold text-red-400 mt-1" id="stat-expired">—</p>
+            </div>
+        </div>
+
+        <!-- Add Member + Search Row -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <button onclick="openAddModal()" class="btn-primary text-white font-semibold py-3 px-6 rounded-xl flex items-center gap-2 justify-center">
+                <span class="text-xl">＋</span> Add New Member
+            </button>
+            <div class="flex-1 relative">
+                <input id="search-input" type="text" placeholder="Search by name or number..."
+                    class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none"
+                    oninput="filterMembers()">
+                <span class="absolute right-4 top-3.5 text-gray-500">🔍</span>
+            </div>
+            <button onclick="triggerReminders()" class="bg-gray-800 border border-gray-700 hover:border-cyan-500 text-white font-semibold py-3 px-5 rounded-xl transition flex items-center gap-2 justify-center">
+                🔔 Run Reminders
+            </button>
+        </div>
+
+        <!-- Members Table -->
+        <div class="glass rounded-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-gray-700/50 text-gray-400 text-sm uppercase tracking-wider">
+                            <th class="px-5 py-4">Name</th>
+                            <th class="px-5 py-4">WhatsApp</th>
+                            <th class="px-5 py-4 hidden md:table-cell">Joined</th>
+                            <th class="px-5 py-4">End Date</th>
+                            <th class="px-5 py-4 hidden sm:table-cell">Paid</th>
+                            <th class="px-5 py-4">Status</th>
+                            <th class="px-5 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="members-table-body">
+                        <tr><td colspan="7" class="text-center py-12 text-gray-500">Loading members...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ======================== ADD/EDIT MODAL ======================== -->
+<div id="member-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0 bg-black/60" onclick="closeModal()"></div>
+    <div class="modal-box relative z-10 glass rounded-2xl p-6 sm:p-8 w-full max-w-lg mx-auto mt-[10vh] fade-in">
+        <h2 id="modal-title" class="text-3xl text-cyan-400 uppercase mb-6">Add New Member</h2>
+        <form id="member-form" class="space-y-4" onsubmit="handleMemberSubmit(event)">
+            <input type="hidden" id="edit-member-id">
+            <div>
+                <label class="text-sm text-gray-400 mb-1 block">Full Name</label>
+                <input id="f-name" type="text" required placeholder="e.g. Rahul Kumar"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none">
+            </div>
+            <div>
+                <label class="text-sm text-gray-400 mb-1 block">WhatsApp Number</label>
+                <input id="f-whatsapp" type="tel" required placeholder="e.g. 9876543210"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm text-gray-400 mb-1 block">Date Joined</label>
+                    <input id="f-date" type="date" required
+                        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 mb-1 block">Money Paid (₹)</label>
+                    <input id="f-money" type="number" required min="1000" step="500" placeholder="1000"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none">
+                </div>
+            </div>
+            <div class="glass rounded-xl p-3 text-sm text-gray-400" id="end-date-preview">
+                📅 Membership end date will be calculated automatically
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="flex-1 btn-primary text-white font-bold py-3 rounded-xl uppercase tracking-wider">
+                    Save Member
+                </button>
+                <button type="button" onclick="closeModal()" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl transition font-semibold">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ======================== DELETE CONFIRM MODAL ======================== -->
+<div id="delete-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/60" onclick="closeDeleteModal()"></div>
+    <div class="relative z-10 glass rounded-2xl p-8 w-full max-w-sm mx-auto mt-[25vh] text-center fade-in">
+        <p class="text-4xl mb-3">⚠️</p>
+        <h3 class="text-2xl text-white mb-2">Delete Member?</h3>
+        <p class="text-gray-400 mb-6" id="delete-member-name">This action cannot be undone.</p>
+        <div class="flex gap-3">
+            <button onclick="confirmDelete()" class="flex-1 btn-danger text-white font-bold py-3 rounded-xl">Delete</button>
+            <button onclick="closeDeleteModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ======================== TOAST ======================== -->
+<div id="toast" class="fixed bottom-6 right-6 z-50 hidden glass rounded-xl px-5 py-3 text-sm font-medium shadow-lg max-w-xs fade-in"></div>
+
+<script>
+// ============================================================
+// CONFIG — Change this to your Render URL in production
+// ============================================================
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
+    ? 'http://localhost:3005'
+    : 'https://battle-beast-server.onrender.com';
+
+let authToken = sessionStorage.getItem('bb_admin_token') || null;
+let allMembers = [];
+let deletingMemberId = null;
+
+// ============================================================
+// AUTH
+// ============================================================
+async function handleLogin() {
+    const pw = document.getElementById('login-password').value.trim();
+    const errEl = document.getElementById('login-error');
+    if (!pw) { showLoginError('Please enter the password.'); return; }
+
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pw })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+            authToken = data.token;
+            sessionStorage.setItem('bb_admin_token', authToken);
+            showDashboard();
+        } else {
+            showLoginError(data.error || 'Login failed.');
+        }
+    } catch (e) {
+        showLoginError('Cannot connect to server.');
+    }
+}
+
+function showLoginError(msg) {
+    const el = document.getElementById('login-error');
+    el.textContent = msg; el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 4000);
+}
+
+function handleLogout() {
+    fetch(`${API_BASE}/api/admin/logout`, {
+        method: 'POST', headers: { 'Authorization': `Bearer ${authToken}` }
+    }).catch(() => {});
+    authToken = null;
+    sessionStorage.removeItem('bb_admin_token');
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('login-password').value = '';
+}
+
+// Allow Enter key on login
+document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
+// ============================================================
+// DASHBOARD INIT
+// ============================================================
+function showDashboard() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    loadStats();
+    loadMembers();
+}
+
+// Auto-login if token exists
+if (authToken) {
+    // Verify token is still valid
+    fetch(`${API_BASE}/api/stats`, { headers: { 'Authorization': `Bearer ${authToken}` } })
+        .then(r => { if (r.ok) showDashboard(); else handleLogout(); })
+        .catch(() => handleLogout());
+}
+
+// ============================================================
+// STATS
+// ============================================================
+async function loadStats() {
+    try {
+        const res = await apiFetch('/api/stats');
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('stat-total').textContent = data.stats.total;
+            document.getElementById('stat-active').textContent = data.stats.active;
+            document.getElementById('stat-expiring').textContent = data.stats.expiringSoon;
+            document.getElementById('stat-expired').textContent = data.stats.expired;
+            // WhatsApp status
+            const dot = document.getElementById('wa-dot');
+            const txt = document.getElementById('wa-text');
+            if (data.whatsapp?.connected) {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-dot';
+                txt.textContent = 'WhatsApp Connected';
+                txt.className = 'text-emerald-400 hidden sm:inline';
+            } else {
+                dot.className = 'w-2.5 h-2.5 rounded-full bg-red-400 pulse-dot';
+                txt.textContent = 'WhatsApp Disconnected';
+                txt.className = 'text-red-400 hidden sm:inline';
+            }
+        }
+    } catch (e) { console.error('Stats error:', e); }
+}
+
+// ============================================================
+// MEMBERS TABLE
+// ============================================================
+async function loadMembers() {
+    try {
+        const res = await apiFetch('/api/members');
+        const data = await res.json();
+        if (data.success) {
+            allMembers = data.members;
+            renderMembers(allMembers);
+        }
+    } catch (e) {
+        document.getElementById('members-table-body').innerHTML =
+            '<tr><td colspan="7" class="text-center py-12 text-red-400">Failed to load members</td></tr>';
+    }
+}
+
+function renderMembers(members) {
+    const tbody = document.getElementById('members-table-body');
+    if (members.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-12 text-gray-500">No members found. Click "+ Add New Member" to get started.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = members.map(m => `
+        <tr class="table-row border-b border-gray-800/50">
+            <td class="px-5 py-4 font-medium">${esc(m.name)}</td>
+            <td class="px-5 py-4 text-gray-300 font-mono text-sm">${formatPhone(m.whatsapp)}</td>
+            <td class="px-5 py-4 text-gray-400 text-sm hidden md:table-cell">${fmtDate(m.dateJoined)}</td>
+            <td class="px-5 py-4 text-sm font-medium">${fmtDate(m.endDate)}</td>
+            <td class="px-5 py-4 text-gray-300 hidden sm:table-cell">₹${m.moneyPaid.toLocaleString()}</td>
+            <td class="px-5 py-4">${statusBadge(m.status)}</td>
+            <td class="px-5 py-4 text-right">
+                <div class="flex items-center justify-end gap-2">
+                    <button onclick="openEditModal('${m.id}')" class="text-cyan-400 hover:text-cyan-300 text-sm transition" title="Edit">✏️</button>
+                    <button onclick="openDeleteModal('${m.id}','${esc(m.name)}')" class="text-red-400 hover:text-red-300 text-sm transition" title="Delete">🗑️</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterMembers() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const filtered = allMembers.filter(m =>
+        m.name.toLowerCase().includes(q) || m.whatsapp.includes(q)
+    );
+    renderMembers(filtered);
+}
+
+// ============================================================
+// ADD / EDIT MODAL
+// ============================================================
+function openAddModal() {
+    document.getElementById('modal-title').textContent = 'Add New Member';
+    document.getElementById('edit-member-id').value = '';
+    document.getElementById('member-form').reset();
+    document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('f-money').value = 1000;
+    updateEndDatePreview();
+    document.getElementById('member-modal').classList.remove('hidden');
+}
+
+function openEditModal(id) {
+    const m = allMembers.find(x => x.id === id);
+    if (!m) return;
+    document.getElementById('modal-title').textContent = 'Edit Member';
+    document.getElementById('edit-member-id').value = id;
+    document.getElementById('f-name').value = m.name;
+    document.getElementById('f-whatsapp').value = m.whatsapp;
+    document.getElementById('f-date').value = m.dateJoined;
+    document.getElementById('f-money').value = m.moneyPaid;
+    updateEndDatePreview();
+    document.getElementById('member-modal').classList.remove('hidden');
+}
+
+function closeModal() { document.getElementById('member-modal').classList.add('hidden'); }
+
+async function handleMemberSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('edit-member-id').value;
+    const body = {
+        name: document.getElementById('f-name').value,
+        whatsapp: document.getElementById('f-whatsapp').value,
+        dateJoined: document.getElementById('f-date').value,
+        moneyPaid: Number(document.getElementById('f-money').value)
+    };
+
+    try {
+        let res;
+        if (id) {
+            res = await apiFetch(`/api/members/${id}`, 'PUT', body);
+        } else {
+            res = await apiFetch('/api/members', 'POST', body);
+        }
+        const data = await res.json();
+        if (res.ok) {
+            showToast(id ? '✏️ Member updated!' : '✅ Member added!', 'text-emerald-400');
+            closeModal();
+            loadMembers();
+            loadStats();
+        } else {
+            showToast(data.error || 'Something went wrong', 'text-red-400');
+        }
+    } catch (err) {
+        showToast('Server error. Try again.', 'text-red-400');
+    }
+}
+
+// Live end-date preview
+document.getElementById('f-date')?.addEventListener('change', updateEndDatePreview);
+document.getElementById('f-money')?.addEventListener('input', updateEndDatePreview);
+
+function updateEndDatePreview() {
+    const dateVal = document.getElementById('f-date').value;
+    const moneyVal = Number(document.getElementById('f-money').value);
+    const previewEl = document.getElementById('end-date-preview');
+    if (dateVal && moneyVal >= 1000) {
+        const months = Math.floor(moneyVal / 1000);
+        const days = months * 30;
+        const joinDate = new Date(dateVal);
+        const endDate = new Date(joinDate);
+        endDate.setDate(endDate.getDate() + days);
+        previewEl.innerHTML = `📅 End Date: <strong class="text-cyan-400">${endDate.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</strong> (${months} month${months>1?'s':''})`;
+    } else {
+        previewEl.innerHTML = '📅 Membership end date will be calculated automatically';
+    }
+}
+
+// ============================================================
+// DELETE MODAL
+// ============================================================
+function openDeleteModal(id, name) {
+    deletingMemberId = id;
+    document.getElementById('delete-member-name').textContent = `Are you sure you want to delete "${name}"?`;
+    document.getElementById('delete-modal').classList.remove('hidden');
+}
+function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); deletingMemberId = null; }
+
+async function confirmDelete() {
+    if (!deletingMemberId) return;
+    try {
+        const res = await apiFetch(`/api/members/${deletingMemberId}`, 'DELETE');
+        if (res.ok) {
+            showToast('🗑️ Member deleted.', 'text-red-400');
+            closeDeleteModal();
+            loadMembers();
+            loadStats();
+        }
+    } catch (e) { showToast('Failed to delete.', 'text-red-400'); }
+}
+
+// ============================================================
+// REMINDERS
+// ============================================================
+async function triggerReminders() {
+    showToast('🔔 Running reminder check...', 'text-cyan-400');
+    try {
+        const res = await fetch(`${API_BASE}/api/check-reminders`);
+        const data = await res.json();
+        if (data.success) {
+            const total = data.sent || 0;
+            showToast(total > 0 ? `✅ ${total} reminder(s) sent!` : '✅ No reminders due right now.', 'text-emerald-400');
+        } else {
+            showToast(`⚠️ ${data.reason || 'Check failed'}`, 'text-amber-400');
+        }
+    } catch (e) { showToast('Server error.', 'text-red-400'); }
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function apiFetch(path, method = 'GET', body = null) {
+    const opts = { method, headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    return fetch(`${API_BASE}${path}`, opts);
+}
+
+function statusBadge(s) {
+    if (s === 'active') return '<span class="badge-active text-xs px-3 py-1 rounded-full font-semibold">Active</span>';
+    if (s === 'expiring_soon') return '<span class="badge-warning text-xs px-3 py-1 rounded-full font-semibold">Expiring</span>';
+    return '<span class="badge-expired text-xs px-3 py-1 rounded-full font-semibold">Expired</span>';
+}
+
+function fmtDate(d) {
+    if (!d) return '—';
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function formatPhone(p) {
+    if (!p) return '—';
+    if (p.startsWith('91') && p.length === 12) return `+91 ${p.slice(2,7)} ${p.slice(7)}`;
+    return p;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function showToast(msg, color = 'text-white') {
+    const t = document.getElementById('toast');
+    t.innerHTML = `<span class="${color}">${msg}</span>`;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 4000);
+}
+</script>
+</body>
+</html>
