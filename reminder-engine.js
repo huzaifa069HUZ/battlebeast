@@ -13,7 +13,7 @@ Your membership is now active ✅
 💰 Paid: ₹${member.moneyPaid}
 
 Stay consistent, stay BEAST! 🔥
-📞 Contact: +91 92414 04105`;
+📞 Contact: +91 9473445924`;
 }
 
 function getThreeDayWarningMessage(member) {
@@ -24,7 +24,7 @@ Your BATTLE BEAST membership expires in *3 days!*
 
 Renew now to keep your gains going 💪
 Visit the gym or call us:
-📞 +91 92414 04105
+📞 +91 9473445924
 📍 Bailey Road, Patna`;
 }
 
@@ -35,7 +35,7 @@ Your BATTLE BEAST membership expires *TOMORROW!*
 📅 Expiry: ${formatDate(member.endDate)}
 
 Please renew today to avoid any interruption in your workouts 💪
-📞 +91 92414 04105
+📞 +91 9473445924
 📍 Bailey Road, Patna`;
 }
 
@@ -46,7 +46,7 @@ function getExpiryMessage(member) {
 Don't let your hard work go to waste!
 Renew immediately ➡️ ₹1000/month
 
-📞 +91 92414 04105
+📞 +91 9473445924
 See you at the gym! 🏋️💪`;
 }
 
@@ -58,7 +58,7 @@ Your BATTLE BEAST membership has been extended! ✅
 📅 New Expiry Date: ${formatDate(member.endDate)}
 
 Keep crushing those goals! 🔥
-📞 +91 92414 04105`;
+📞 +91 9473445924`;
 }
 
 async function sendRenewalMessage(member) {

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BATTLE BEAST - AC Unisex Gym in Patna</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
     <!-- Netlify Identity Widget Script -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <style>
@@ -14,38 +16,52 @@
             font-family: 'Poppins', sans-serif;
             scroll-behavior: smooth;
         }
+
         /* Using Teko for headings for a strong, athletic feel */
-        h1, h2, h3, h4, h5, h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: 'Teko', sans-serif;
             font-weight: 600;
             letter-spacing: 1px;
         }
+
         .hero-section {
             background-image: url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=2575&auto=format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Creates the parallax effect */
+            background-attachment: fixed;
+            /* Creates the parallax effect */
         }
+
         .text-shadow {
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
+
         .animated-card {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
+
         .animated-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+
         /* Scroll-triggered animation styles */
         .reveal {
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
+
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
         /* WhatsApp Floating Icon */
         .whatsapp-float {
             position: fixed;
@@ -65,6 +81,7 @@
             justify-content: center;
             transition: transform 0.3s ease;
         }
+
         .whatsapp-float:hover {
             transform: scale(1.1);
         }
@@ -72,11 +89,14 @@
         /* NEW: Stylish box for the login/signup feature */
         [data-netlify-identity-menu] {
             background: linear-gradient(145deg, #262626, #1a1a1a);
-            border-radius: 0.75rem; /* rounded-xl */
-            padding: 0.25rem; /* p-1 */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            padding: 0.25rem;
+            /* p-1 */
             box-shadow: 4px 4px 8px #171717, -4px -4px 8px #2e2e2e;
             transition: all 0.3s ease-in-out;
         }
+
         [data-netlify-identity-menu]:hover {
             transform: translateY(-2px) scale(1.03);
             box-shadow: 6px 6px 12px #171717, -6px -6px 12px #2e2e2e;
@@ -85,13 +105,17 @@
         /* Custom styles for Netlify Identity Widget */
         [data-netlify-identity-menu] button {
             display: inline-block;
-            background-color: #06b6d4; /* cyan-500 */
+            background-color: #06b6d4;
+            /* cyan-500 */
             color: white;
             font-weight: bold;
-            padding: 0.5rem 1rem; /* py-2 px-4 */
-            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.5rem 1rem;
+            /* py-2 px-4 */
+            border-radius: 0.5rem;
+            /* rounded-lg */
             transition: background-color 0.3s;
-            text-decoration: none; /* remove underline from links */
+            text-decoration: none;
+            /* remove underline from links */
             border: none;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
@@ -99,7 +123,8 @@
         }
 
         [data-netlify-identity-menu] button:hover {
-            background-color: #0891b2; /* cyan-600 */
+            background-color: #0891b2;
+            /* cyan-600 */
         }
 
         /* Style for the logged-in user info */
@@ -107,18 +132,23 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0 0.5rem; /* Add some horizontal padding for logged-in state */
+            padding: 0 0.5rem;
+            /* Add some horizontal padding for logged-in state */
         }
 
-        .netlify-identity-user-details .netlify-identity-user, .netlify-identity-user-details .netlify-identity-logout {
-             color: #d1d5db; /* gray-300 */
-             text-decoration: none;
+        .netlify-identity-user-details .netlify-identity-user,
+        .netlify-identity-user-details .netlify-identity-logout {
+            color: #d1d5db;
+            /* gray-300 */
+            text-decoration: none;
         }
-         .netlify-identity-user-details .netlify-identity-logout:hover {
-             color: #06b6d4;
-         }
+
+        .netlify-identity-user-details .netlify-identity-logout:hover {
+            color: #06b6d4;
+        }
     </style>
 </head>
+
 <body class="bg-gray-900 text-white">
 
     <!-- Header -->
@@ -132,9 +162,12 @@
                 <a href="#trainers" class="hover:text-cyan-400 transition duration-300">Trainers</a>
                 <a href="#contact" class="hover:text-cyan-400 transition duration-300">Contact</a>
                 <a href="store.html" class="hover:text-cyan-400 transition duration-300 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M4 4a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                      <path fill-rule="evenodd" d="M5 8a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V8zm2 3a1 1 0 100 2h4a1 1 0 100-2H7z" clip-rule="evenodd" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path d="M4 4a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                        <path fill-rule="evenodd"
+                            d="M5 8a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V8zm2 3a1 1 0 100 2h4a1 1 0 100-2H7z"
+                            clip-rule="evenodd" />
                     </svg>
                     Buy From Us
                 </a>
@@ -142,7 +175,8 @@
             <!-- Login/Signup Area -->
             <div data-netlify-identity-menu class="hidden md:flex items-center space-x-4 ml-8"></div>
             <button id="mobile-menu-button" class="md:hidden text-2xl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
             </button>
@@ -164,11 +198,17 @@
     <section id="home" class="hero-section h-screen flex items-center justify-center text-center">
         <div class="bg-black/60 absolute inset-0"></div>
         <div class="relative z-10 reveal active">
-            <h1 class="text-6xl md:text-8xl lg:text-9xl text-white font-extrabold uppercase text-shadow">Get <span class="text-cyan-400">Shredded</span></h1>
-            <p class="text-xl md:text-2xl mt-4 text-gray-200 text-shadow">Patna's Premier AC Unisex Gym. A Safe Place For You.</p>
+            <h1 class="text-6xl md:text-8xl lg:text-9xl text-white font-extrabold uppercase text-shadow">Get <span
+                    class="text-cyan-400">Shredded</span></h1>
+            <p class="text-xl md:text-2xl mt-4 text-gray-200 text-shadow">Patna's Premier AC Unisex Gym. A Safe Place
+                For You.</p>
             <div class="mt-8 flex flex-col items-center space-y-4">
-                <a href="#contact" class="w-full max-w-xs bg-cyan-500 text-white uppercase font-bold text-lg px-8 py-4 rounded-lg hover:bg-cyan-600 transition duration-300">Start Your Journey</a>
-                <a href="#contact" class="w-full max-w-xs bg-cyan-500 text-white uppercase font-bold text-lg px-8 py-4 rounded-lg hover:bg-cyan-600 transition duration-300">Join Now</a>
+                <a href="#contact"
+                    class="w-full max-w-xs bg-cyan-500 text-white uppercase font-bold text-lg px-8 py-4 rounded-lg hover:bg-cyan-600 transition duration-300">Start
+                    Your Journey</a>
+                <a href="#contact"
+                    class="w-full max-w-xs bg-cyan-500 text-white uppercase font-bold text-lg px-8 py-4 rounded-lg hover:bg-cyan-600 transition duration-300">Join
+                    Now</a>
             </div>
         </div>
     </section>
@@ -180,11 +220,15 @@
         <section id="about" class="py-20">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="reveal">
-                    <img src="https://images.unsplash.com/photo-1540496905036-5937c10647cc?q=80&w=2574&auto=format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Friendly gym environment" class="rounded-2xl shadow-2xl w-full h-auto object-cover">
+                    <img src="https://images.unsplash.com/photo-1540496905036-5937c10647cc?q=80&w=2574&auto=format&fit=crop&ixlib-rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="Friendly gym environment" class="rounded-2xl shadow-2xl w-full h-auto object-cover">
                 </div>
                 <div class="reveal">
                     <h2 class="text-5xl md:text-6xl text-cyan-400 uppercase">Welcome to the Beast's Lair</h2>
-                    <p class="mt-4 text-lg text-gray-300">BATTLE BEAST isn't just a gym; it's a community. Located in the heart of Patna, we offer a fully air-conditioned, unisex facility where everyone feels welcome. Our mission is to provide a safe, supportive, and motivating environment with friendly trainers and members to help you crush your fitness goals.</p>
+                    <p class="mt-4 text-lg text-gray-300">BATTLE BEAST isn't just a gym; it's a community. Located in
+                        the heart of Patna, we offer a fully air-conditioned, unisex facility where everyone feels
+                        welcome. Our mission is to provide a safe, supportive, and motivating environment with friendly
+                        trainers and members to help you crush your fitness goals.</p>
                     <div class="mt-6 grid grid-cols-2 gap-4 text-center">
                         <div class="bg-gray-800 p-4 rounded-lg">
                             <h3 class="text-3xl text-cyan-400">AC</h3>
@@ -203,7 +247,8 @@
         <section id="services" class="py-20 text-center">
             <div class="reveal">
                 <h2 class="text-5xl md:text-6xl uppercase">Our <span class="text-cyan-400">Services</span></h2>
-                <p class="mt-4 max-w-2xl mx-auto text-gray-300">We provide everything you need to transform your body and mind.</p>
+                <p class="mt-4 max-w-2xl mx-auto text-gray-300">We provide everything you need to transform your body
+                    and mind.</p>
             </div>
             <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Service Card 1 -->
@@ -237,7 +282,8 @@
         <section id="trainers" class="py-20 text-center">
             <div class="reveal">
                 <h2 class="text-5xl md:text-6xl uppercase">Meet Our <span class="text-cyan-400">Trainers</span></h2>
-                <p class="mt-4 max-w-2xl mx-auto text-gray-300">Our certified and friendly trainers are here to guide you every step of the way.</p>
+                <p class="mt-4 max-w-2xl mx-auto text-gray-300">Our certified and friendly trainers are here to guide
+                    you every step of the way.</p>
             </div>
             <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Trainer Card 1 -->
@@ -250,7 +296,8 @@
                 </div>
                 <!-- Trainer Card 2 -->
                 <div class="bg-gray-800 rounded-2xl overflow-hidden animated-card reveal">
-                    <img src="https://placehold.co/400x400/334155/e2e8f0?text=Trainer+2" alt="Trainer 2" class="w-full h-80 object-cover">
+                    <img src="https://placehold.co/400x400/334155/e2e8f0?text=Trainer+2" alt="Trainer 2"
+                        class="w-full h-80 object-cover">
                     <div class="p-6">
                         <h3 class="text-3xl">Priya Singh</h3>
                         <p class="text-cyan-400">Yoga & Flexibility</p>
@@ -272,30 +319,58 @@
             <div class="grid md:grid-cols-2 gap-12 items-start">
                 <div class="reveal">
                     <h2 class="text-5xl md:text-6xl uppercase">Join <span class="text-cyan-400">Today</span></h2>
-                    <p class="mt-4 text-lg text-gray-300">Ready to transform? Send us a message or visit us in Patna. We can't wait to meet you!</p>
+                    <p class="mt-4 text-lg text-gray-300">Ready to transform? Send us a message or visit us in Patna. We
+                        can't wait to meet you!</p>
                     <div class="mt-6 space-y-4">
-                        <p class="flex items-center"><span class="text-cyan-400 mr-3 text-2xl">📍</span> Bailey Road, Patna, Bihar</p>
-                        <p class="flex items-center"><span class="text-cyan-400 mr-3 text-2xl">📞</span> +91 92414 04105</p>
-                        <p class="flex items-center">
-                            <span class="text-cyan-400 mr-3 text-2xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                            </span>
-                             thebattlebeast999@gmail.com
+                        <p class="flex items-center"><span class="text-cyan-400 mr-3 text-2xl">📍</span> Bailey Road,
+                            Patna, Bihar</p>
+                        <p class="flex items-center"><span class="text-cyan-400 mr-3 text-2xl">📞</span> +91 94734 45924
                         </p>
                         <p class="flex items-center">
                             <span class="text-cyan-400 mr-3 text-2xl">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="w-6 h-6">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                    </path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
                             </span>
-                            <a href="https://www.instagram.com/thefitnessfreakpatna/" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-400 transition duration-300">thefitnessfreakpatna</a>
+                            thebattlebeast999@gmail.com
+                        </p>
+                        <p class="flex items-center">
+                            <span class="text-cyan-400 mr-3 text-2xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="w-6 h-6">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </span>
+                            <a href="https://www.instagram.com/thefitnessfreakpatna/" target="_blank"
+                                rel="noopener noreferrer"
+                                class="hover:text-cyan-400 transition duration-300">thefitnessfreakpatna</a>
                         </p>
                     </div>
                 </div>
                 <form id="contact-form" class="bg-gray-800 p-8 rounded-2xl space-y-4 reveal">
-                    <input type="text" placeholder="Your Name" class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
-                    <input type="email" placeholder="Your Email" class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
-                    <input type="tel" placeholder="Your Phone Number" class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required>
-                    <textarea placeholder="Your Message" rows="5" class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" required></textarea>
-                    <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Send Message</button>
+                    <input type="text" placeholder="Your Name"
+                        class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        required>
+                    <input type="email" placeholder="Your Email"
+                        class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        required>
+                    <input type="tel" placeholder="Your Phone Number"
+                        class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        required>
+                    <textarea placeholder="Your Message" rows="5"
+                        class="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        required></textarea>
+                    <button type="submit"
+                        class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Send
+                        Message</button>
                     <div id="form-message" class="text-center mt-4"></div>
                 </form>
             </div>
@@ -312,18 +387,27 @@
     </footer>
 
     <!-- Pop-up Modal -->
-    <div id="popup-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-[100] px-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="modal-content" class="bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative transform scale-95 transition-all duration-300">
-            <button id="close-modal-button" class="absolute top-2 right-4 text-gray-400 hover:text-white text-4xl font-light">&times;</button>
+    <div id="popup-modal"
+        class="fixed inset-0 bg-black/70 flex items-center justify-center z-[100] px-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modal-content"
+            class="bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative transform scale-95 transition-all duration-300">
+            <button id="close-modal-button"
+                class="absolute top-2 right-4 text-gray-400 hover:text-white text-4xl font-light">&times;</button>
             <h2 class="text-4xl md:text-5xl text-cyan-400 uppercase">Book Your Free Trial Now!</h2>
             <p class="mt-4 text-lg text-gray-300">Take the first step towards a new you. No commitment required.</p>
-            <a href="#contact" id="modal-join-button" class="mt-6 inline-block w-full bg-cyan-500 text-white uppercase font-bold text-lg px-8 py-3 rounded-lg hover:bg-cyan-600 transition duration-300">Get Started</a>
+            <a href="#contact" id="modal-join-button"
+                class="mt-6 inline-block w-full bg-cyan-500 text-white uppercase font-bold text-lg px-8 py-3 rounded-lg hover:bg-cyan-600 transition duration-300">Get
+                Started</a>
         </div>
     </div>
 
     <!-- WhatsApp Floating Icon -->
-    <a href="https://wa.me/919241404105" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-8 h-8"><path fill="currentColor" d="M16.21,4.46C9.39,4.46,3.8,10.05,3.8,16.88c0,2.75,0.9,5.29,2.4,7.4L3.52,30.2l6.29-2.1c2.03,1.3,4.47,2.03,7.07,2.03h0c6.82,0,12.41-5.59,12.41-12.41C28.62,10.05,23.03,4.46,16.21,4.46z M22.33,19.48c-0.33,0.83-1.84,1.54-2.5,1.63c-0.53,0.07-1.12,0.07-1.72-0.12c-0.83-0.27-1.94-0.83-3.6-2.4c-1.9-1.77-3.13-3.95-3.29-4.22c-0.16-0.27-1.39-1.87-1.39-3.53c0-1.66,0.88-2.45,1.19-2.75c0.3-0.3,0.66-0.36,0.88-0.36c0.22,0,0.44,0,0.63,0c0.25,0,0.63,0.11,0.97,0.82c0.34,0.71,1.19,2.91,1.29,3.11c0.1,0.2,0.16,0.44,0.06,0.68c-0.1,0.24-0.16,0.39-0.3,0.53c-0.14,0.14-0.28,0.3-0.42,0.44c-0.13,0.13-0.27,0.27-0.13,0.53c0.14,0.27,0.63,1.1,1.36,1.78c0.91,0.85,1.69,1.13,1.93,1.26c0.24,0.13,0.39,0.1,0.56-0.07c0.17-0.17,0.75-0.88,0.94-1.16c0.2-0.28,0.36-0.22,0.6-0.12c0.24,0.1,1.54,0.73,1.8,0.85c0.27,0.13,0.44,0.2,0.5,0.31C22.6,18.52,22.56,18.82,22.33,19.48z"></path></svg>
+    <a href="https://wa.me/919473445924" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-8 h-8">
+            <path fill="currentColor"
+                d="M16.21,4.46C9.39,4.46,3.8,10.05,3.8,16.88c0,2.75,0.9,5.29,2.4,7.4L3.52,30.2l6.29-2.1c2.03,1.3,4.47,2.03,7.07,2.03h0c6.82,0,12.41-5.59,12.41-12.41C28.62,10.05,23.03,4.46,16.21,4.46z M22.33,19.48c-0.33,0.83-1.84,1.54-2.5,1.63c-0.53,0.07-1.12,0.07-1.72-0.12c-0.83-0.27-1.94-0.83-3.6-2.4c-1.9-1.77-3.13-3.95-3.29-4.22c-0.16-0.27-1.39-1.87-1.39-3.53c0-1.66,0.88-2.45,1.19-2.75c0.3-0.3,0.66-0.36,0.88-0.36c0.22,0,0.44,0,0.63,0c0.25,0,0.63,0.11,0.97,0.82c0.34,0.71,1.19,2.91,1.29,3.11c0.1,0.2,0.16,0.44,0.06,0.68c-0.1,0.24-0.16,0.39-0.3,0.53c-0.14,0.14-0.28,0.3-0.42,0.44c-0.13,0.13-0.27,0.27-0.13,0.53c0.14,0.27,0.63,1.1,1.36,1.78c0.91,0.85,1.69,1.13,1.93,1.26c0.24,0.13,0.39,0.1,0.56-0.07c0.17-0.17,0.75-0.88,0.94-1.16c0.2-0.28,0.36-0.22,0.6-0.12c0.24,0.1,1.54,0.73,1.8,0.85c0.27,0.13,0.44,0.2,0.5,0.31C22.6,18.52,22.56,18.82,22.33,19.48z">
+            </path>
+        </svg>
     </a>
 
 
@@ -375,7 +459,7 @@
         const contactForm = document.getElementById('contact-form');
         const formMessage = document.getElementById('form-message');
 
-        contactForm.addEventListener('submit', async function(e) {
+        contactForm.addEventListener('submit', async function (e) {
             e.preventDefault(); // Prevent the default form submission
 
             // Get form data
@@ -485,5 +569,5 @@
     </script>
 
 </body>
-</html>
 
+</html>
