@@ -215,11 +215,9 @@
 
 <script>
 // ============================================================
-// CONFIG — Change this to your Render URL in production
+// CONFIG
 // ============================================================
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
-    ? 'http://localhost:3005'
-    : 'https://battle-beast-server.onrender.com';
+const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:3005' : '';
 
 let authToken = sessionStorage.getItem('bb_admin_token') || null;
 let allMembers = [];

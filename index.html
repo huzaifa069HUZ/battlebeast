@@ -388,9 +388,7 @@
             formMessage.className = 'text-center mt-4 text-gray-400';
 
             try {
-                const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
-                    ? 'http://localhost:3005'
-                    : 'https://battle-beast-server.onrender.com';
+                const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:3005' : '';
 
                 // Send the data to your backend server
                 const response = await fetch(`${API_BASE}/send-message`, {
