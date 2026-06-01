@@ -1,8 +1,9 @@
 // whatsapp-bot.js — Baileys WhatsApp Bot Connection & Messaging
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const pino = require('pino');
 const path = require('path');
-const readline = require('readline');
+const { getDb } = require('./firebase-config');
+const { useFirebaseAuthState } = require('./firebase-auth-state');
 
 let sock = null;
 let isConnected = false;
@@ -23,11 +24,16 @@ const PAIRING_PHONE = process.env.WA_PHONE_NUMBER || '';
 
 /**
  * Initialize and connect the WhatsApp bot.
- * Uses pairing code method — you'll get a code to enter in WhatsApp.
+ * Uses custom Firebase Auth State for permanent serverless connections.
  */
 async function connectWhatsApp() {
     try {
-        const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
+        const db = getDb();
+        if (!db) {
+            throw new Error('Firebase DB not initialized. Call initializeFirebase() first.');
+        }
+
+        const { state, saveCreds } = await useFirebaseAuthState(db, 'whatsapp_auth');
         const { version } = await fetchLatestBaileysVersion();
 
         console.log(`📱 Using Baileys version: ${version.join('.')}`);
@@ -188,10 +194,9 @@ function getConnectionStatus() {
 }
 
 /**
- * Log out and delete the session.
+ * Log out and delete the session from Firestore.
  */
 async function disconnectAndClean() {
-    const fs = require('fs');
     try {
         if (sock) {
             await sock.logout();
@@ -207,10 +212,27 @@ async function disconnectAndClean() {
     connectionError = null;
     connectionRetries = 0;
 
+    // Delete Firestore session
+    try {
+        const db = getDb();
+        if (db) {
+            const snapshot = await db.collection('whatsapp_auth').get();
+            const batch = db.batch();
+            snapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+            console.log('🧹 Firestore WhatsApp session cleared successfully.');
+        }
+    } catch (err) {
+        console.error('Failed to clear Firestore session:', err.message);
+    }
+
+    // Still delete local dir just in case any residue exists
+    const fs = require('fs');
     if (fs.existsSync(AUTH_DIR)) {
         fs.rmSync(AUTH_DIR, { recursive: true, force: true });
     }
-    console.log('🧹 WhatsApp session cleared successfully.');
 }
 
 // --- Utility functions ---
