@@ -9,6 +9,11 @@ let isConnected = false;
 let connectionRetries = 0;
 const MAX_RETRIES = 5;
 
+// State for Admin UI
+let currentQR = null;
+let currentPairingCode = null;
+let connectionError = null;
+
 // Auth info directory — stores WhatsApp session
 const AUTH_DIR = path.join(__dirname, 'auth_info');
 
@@ -38,11 +43,19 @@ async function connectWhatsApp() {
         sock.ev.on('connection.update', async (update) => {
             const { connection, lastDisconnect, qr } = update;
 
+            if (qr) {
+                currentQR = qr;
+                currentPairingCode = null;
+                connectionError = null;
+            }
+
             // If we get a QR code, try pairing code method instead
             if (qr && !sock.authState.creds.registered) {
                 if (PAIRING_PHONE) {
                     try {
                         const code = await sock.requestPairingCode(PAIRING_PHONE);
+                        currentPairingCode = code;
+                        currentQR = null;
                         console.log('\n📱 ====================================');
                         console.log(`📱 PAIRING CODE: ${code}`);
                         console.log('📱 Open WhatsApp → Settings → Linked Devices');
@@ -65,6 +78,12 @@ async function connectWhatsApp() {
                 const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
                 console.log(`⚠️ WhatsApp disconnected. Status: ${statusCode}. Reconnect: ${shouldReconnect}`);
+                
+                if (statusCode === DisconnectReason.loggedOut) {
+                    connectionError = 'Logged out. Please click "Disconnect & Reset" and pair again.';
+                } else if (connectionRetries >= MAX_RETRIES) {
+                    connectionError = 'Max connection attempts reached. Server requires restart or reset.';
+                }
 
                 if (shouldReconnect && connectionRetries < MAX_RETRIES) {
                     connectionRetries++;
@@ -79,6 +98,9 @@ async function connectWhatsApp() {
             } else if (connection === 'open') {
                 isConnected = true;
                 connectionRetries = 0;
+                currentQR = null;
+                currentPairingCode = null;
+                connectionError = null;
                 console.log('✅ WhatsApp Bot Connected Successfully!');
             }
         });
@@ -88,6 +110,7 @@ async function connectWhatsApp() {
 
     } catch (error) {
         console.error('❌ Failed to connect WhatsApp:', error.message);
+        connectionError = error.message;
         if (connectionRetries < MAX_RETRIES) {
             connectionRetries++;
             setTimeout(connectWhatsApp, 10000);
@@ -157,8 +180,37 @@ async function sendWhatsAppMessage(phoneNumber, messageText) {
 function getConnectionStatus() {
     return {
         connected: isConnected,
-        retries: connectionRetries
+        retries: connectionRetries,
+        qr: currentQR,
+        pairingCode: currentPairingCode,
+        error: connectionError
     };
+}
+
+/**
+ * Log out and delete the session.
+ */
+async function disconnectAndClean() {
+    const fs = require('fs');
+    try {
+        if (sock) {
+            await sock.logout();
+        }
+    } catch (e) {
+        console.error('Logout error:', e.message);
+    }
+    
+    sock = null;
+    isConnected = false;
+    currentQR = null;
+    currentPairingCode = null;
+    connectionError = null;
+    connectionRetries = 0;
+
+    if (fs.existsSync(AUTH_DIR)) {
+        fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    }
+    console.log('🧹 WhatsApp session cleared successfully.');
 }
 
 // --- Utility functions ---
@@ -174,6 +226,7 @@ module.exports = {
     connectWhatsApp,
     sendWhatsAppMessage,
     getConnectionStatus,
+    disconnectAndClean,
     delay,
     randomDelay
 };

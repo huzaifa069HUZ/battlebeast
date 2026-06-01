@@ -342,6 +342,35 @@ app.get('/api/whatsapp/status', requireAuth, (req, res) => {
     res.json({ success: true, ...status });
 });
 
+// POST /api/whatsapp/connect — Trigger WhatsApp connection
+app.post('/api/whatsapp/connect', requireAuth, async (req, res) => {
+    try {
+        // Disconnect first to ensure a clean slate
+        const { disconnectAndClean } = require('./whatsapp-bot');
+        await disconnectAndClean();
+        
+        // Wait a second before reconnecting
+        setTimeout(() => {
+            connectWhatsApp();
+        }, 1000);
+        
+        res.json({ success: true, message: 'Connection initiated.' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// POST /api/whatsapp/disconnect — Log out and wipe session
+app.post('/api/whatsapp/disconnect', requireAuth, async (req, res) => {
+    try {
+        const { disconnectAndClean } = require('./whatsapp-bot');
+        await disconnectAndClean();
+        res.json({ success: true, message: 'Disconnected and session cleared.' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // POST /api/whatsapp/test — Send a test message
 app.post('/api/whatsapp/test', requireAuth, async (req, res) => {
     const { phoneNumber, message } = req.body;
