@@ -2,8 +2,8 @@ name: Trigger Daily Reminders
 
 on:
   schedule:
-    # 03:30 UTC is exactly 09:00 AM IST
-    - cron: '30 3 * * *'
+    # 03:28 UTC is exactly 08:58 AM IST
+    - cron: '28 3 * * *'
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
